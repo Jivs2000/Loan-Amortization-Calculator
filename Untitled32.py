@@ -95,10 +95,10 @@ st.write("Calculate your loan payments, generate a detailed amortization schedul
 # --- Input Section (Sidebar for better organization) ---
 st.sidebar.header("Loan Details")
 
-principal = st.sidebar.number_input("Principal Amount ($)", min_value=1000.0, value=200000.0, step=1000.0)
+principal = st.sidebar.number_input("Principal Amount (₹)", min_value=1000.0, value=200000.0, step=1000.0)
 annual_rate = st.sidebar.number_input("Annual Interest Rate (%)", min_value=0.01, value=4.5, step=0.01)
 term_years = st.sidebar.number_input("Loan Term (Years)", min_value=1, value=30, step=1)
-extra_payment = st.sidebar.number_input("Optional: Extra Monthly Payment ($)", min_value=0.0, value=0.0, step=10.0)
+extra_payment = st.sidebar.number_input("Optional: Extra Monthly Payment (₹)", min_value=0.0, value=0.0, step=10.0)
 
 calculate_button = st.sidebar.button("Calculate Amortization")
 
@@ -124,8 +124,8 @@ if calculate_button:
 
         # --- Summary Metrics ---
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Base Monthly Payment", f"${monthly_payment_base:,.2f}")
-        col2.metric("Total Monthly Payment", f"${total_monthly_payment:,.2f}")
+        col1.metric("Base Monthly Payment", f"₹{monthly_payment_base:,.2f}")
+        col2.metric("Total Monthly Payment", f"₹{total_monthly_payment:,.2f}")
 
         # --- Amortization Schedule Generation ---
         schedule_data = []
@@ -160,7 +160,7 @@ if calculate_button:
 
         df_schedule = pd.DataFrame(schedule_data)
 
-        col3.metric("Total Interest Paid", f"${total_interest_paid:,.2f}")
+        col3.metric("Total Interest Paid", f"₹{total_interest_paid:,.2f}")
         col4.metric("Loan Duration (Months)", f"{payment_number}")
 
         # --- Visualizations Section ---
@@ -169,7 +169,7 @@ if calculate_button:
         # Plot 1: Principal vs. Interest Paid Over Time
         fig_payments = px.line(df_schedule, x="Payment No.", y=["Principal Paid", "Interest Paid"],
                                title="Principal vs. Interest Paid Over Time",
-                               labels={"value": "Amount ($)", "variable": "Component"},
+                               labels={"value": "Amount (₹)", "variable": "Component"},
                                hover_data={"Payment No.": True, "value": ":,.2f", "variable": True})
         fig_payments.update_layout(hovermode="x unified")
         st.plotly_chart(fig_payments, use_container_width=True)
@@ -177,7 +177,7 @@ if calculate_button:
         # Plot 2: Remaining Balance Over Time
         fig_balance = px.area(df_schedule, x="Payment No.", y="Remaining Balance",
                               title="Remaining Loan Balance Over Time",
-                              labels={"Remaining Balance": "Balance ($)"},
+                              labels={"Remaining Balance": "Balance (₹)"},
                               line_shape="spline",
                               hover_data={"Payment No.": True, "Remaining Balance": ":,.2f"})
         fig_balance.update_layout(hovermode="x unified")
@@ -186,12 +186,11 @@ if calculate_button:
         # --- Amortization Schedule Section (Expandable) ---
         with st.expander("View Full Amortization Schedule"):
             st.dataframe(df_schedule.style.format({
-                "Payment Amount": "${:,.2f}",
-                "Principal Paid": "${:,.2f}",
-                "Interest Paid": "${:,.2f}",
-                "Remaining Balance": "${:,.2f}"
+                "Payment Amount": "₹{:,.2f}",
+                "Principal Paid": "₹{:,.2f}",
+                "Interest Paid": "₹{:,.2f}",
+                "Remaining Balance": "₹{:,.2f}"
             }), use_container_width=True)
 
 else:
     st.info("Enter loan details in the sidebar and click 'Calculate Amortization' to generate the schedule.")
-
